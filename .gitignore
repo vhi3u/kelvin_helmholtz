@@ -1,0 +1,12 @@
+# Julia JLD2 data files (too large for GitHub)
+*.jld2
+
+# Large animation/media files
+*.gif
+output/
+
+# Julia package artifacts
+Manifest.toml
+
+# macOS
+.DS_Store
