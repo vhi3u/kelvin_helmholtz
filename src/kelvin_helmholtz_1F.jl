@@ -17,7 +17,7 @@ using JLD2
 
 # grid setup
 Lx, Lz = 10.0, 5.0
-grid = RectilinearGrid(size=(128, 128), x=(-2 * Lx, 2 * Lx), z=(-Lz, 0),
+grid = RectilinearGrid(size=(256, 256), x=(-2 * Lx, 2 * Lx), z=(-Lz, 0),
     topology=(Periodic, Flat, Bounded)) # we use a periodic boundary condition along the x direction to allow flow to appear infinite
 
 # velocity function setup
@@ -35,7 +35,7 @@ model = NonhydrostaticModel(; grid,
 set!(model, u=u_init, w=w_pert)
 
 # simulation setup
-simulation = Simulation(model, Δt=0.001, stop_time=40) # simulation time in seconds
+simulation = Simulation(model, Δt=0.001, stop_time=120) # simulation time in seconds
 conjure_time_step_wizard!(simulation, cfl=0.8)
 
 progress = SingleLineMessenger()
@@ -43,9 +43,9 @@ simulation.callbacks[:progress] = Callback(progress, TimeInterval(5)) # frequenc
 
 # output setup
 u, v, w = model.velocities
-Ω = Field(∂z(u) - ∂x(w))
+ζ = Field(∂z(u) - ∂x(w))  # relative vorticity
 
-simulation.output_writers[:fields] = JLD2Writer(model, (; u, w, Ω),
+simulation.output_writers[:fields] = JLD2Writer(model, (; u, w, ζ),
     schedule=TimeInterval(1),
     filename="output/KH1F.jld2",
     overwrite_existing=true)
@@ -58,6 +58,7 @@ run!(simulation)
 include("visualize_kh.jl")
 include("velocity_profile.jl")
 plot_velocity_profile(u_init, Lz, δ, u₀)
-animate_kh("KH1F.jld2"; format=:mp4)
+animate_kh("KH1F.jld2"; format=:mp4, time_unit="s")
+animate_kh("KH1F.jld2"; format=:gif, time_unit="s")
 
 
