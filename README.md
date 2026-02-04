@@ -72,6 +72,7 @@ After the simulation completes, you can:
 
 - **Generate animation**: Use `src/visualize_kh.jl` to create MP4/GIF animations
 - **Plot velocity profile**: Use `src/velocity_profile.jl` to visualize the velocity field
+- **Note**: These options are already checked in the code and will run automatically after the simulation. You can uncomment them if you want to generate animations or velocity profiles separately.
 
 ## Output
 
