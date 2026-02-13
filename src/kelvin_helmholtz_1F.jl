@@ -16,14 +16,14 @@ using CairoMakie
 using JLD2
 
 # grid setup
-Lx, Lz = 10.0, 5.0
-grid = RectilinearGrid(size=(256, 256), x=(-2 * Lx, 2 * Lx), z=(-Lz, 0),
+Lx, Lz = 5.0, 5.0
+grid = RectilinearGrid(size=(128, 128), x=(0, Lx), z=(-Lz, 0),
     topology=(Periodic, Flat, Bounded)) # we use a periodic boundary condition along the x direction to allow flow to appear infinite
 
 # velocity function setup
-u₀ = 1.0   # velocity magnitude (m/s)
-δ = 0.1  # shear layer thickness (m)
-u_init(x, z) = u₀ * tanh((z + Lz / 2) / δ) # tanh function looks like positive u₀ at top, negative u₀ at bottom, and quick transition layer in between.
+u₀ = 0.5   # velocity magnitude (m/s)
+δ = 0.2  # shear layer thickness (m)
+u_init(x, z) = (u₀ / 2) * (1 + tanh((z + Lz / 2) / δ))  # tanh from 0 at bottom to u₀ at top
 w_pert(x, z) = 0.01 * randn() # small perturbation
 
 # model setup
@@ -35,7 +35,7 @@ model = NonhydrostaticModel(; grid,
 set!(model, u=u_init, w=w_pert)
 
 # simulation setup
-simulation = Simulation(model, Δt=0.001, stop_time=120) # simulation time in seconds
+simulation = Simulation(model, Δt=0.001, stop_time=60) # simulation time in seconds
 conjure_time_step_wizard!(simulation, cfl=0.8)
 
 progress = SingleLineMessenger()

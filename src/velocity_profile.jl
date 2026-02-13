@@ -43,15 +43,27 @@ function plot_velocity_profile(u_func, Lz, δ, u₀;
     end
 
     # Plot velocity profile
-    fig = Figure(size=(400, 500))
-    ax = Axis(fig[1, 1],
-        xlabel="u velocity (m/s)",
-        ylabel="z (m)",
-        title="Initial Velocity Profile U(z)")
-    lines!(ax, u_profile, collect(z_vals), linewidth=3, color=:blue)
-    hlines!(ax, [-Lz / 2], color=:red, linestyle=:dash, label="Shear layer center")
-    vlines!(ax, [0], color=:gray, linestyle=:dot)
-    axislegend(ax, position=:lt)
+    fig = Figure(size=(400, 500), backgroundcolor=:transparent)
+    # ax = Axis(fig[1, 1],
+    #     xlabel="u velocity (m/s)",
+    #     ylabel="z (m)",
+    #     title="Initial Velocity Profile U(z)")
+    ax = Axis(fig[1, 1], backgroundcolor=:transparent)
+    hidedecorations!(ax)
+    hidespines!(ax)
+    # lines!(ax, u_profile, collect(z_vals), linewidth=3, color=:blue)
+    lines!(ax, u_profile, collect(z_vals), linewidth=6, color=:black, linestyle=:dash)
+    # hlines!(ax, [-Lz / 2], color=:red, linestyle=:dash, label="Shear layer center")
+    # vlines!(ax, [0], color=:gray, linestyle=:dot)
+    # axislegend(ax, position=:lt)
+
+    # # Draw horizontal arrows that scale with local velocity
+    # n_arrows = 10
+    # z_arrow = range(-Lz, 0, length=n_arrows)
+    # x_start = zeros(n_arrows)           # arrows start at x=0
+    # u_arrows = [u_func(0, z) for z in z_arrow]  # arrow length = local velocity
+    # arrows!(ax, x_start, collect(z_arrow), u_arrows, zeros(n_arrows);
+    #     tipwidth=15, tiplength=5, shaftwidth=6, color=:black)
 
     save(output_file, fig)
     println("\nVelocity profile saved to $output_file")
