@@ -43,19 +43,15 @@ function plot_velocity_profile(u_func, Lz, δ, u₀;
     end
 
     # Plot velocity profile
-    fig = Figure(size=(400, 500), backgroundcolor=:transparent)
-    # ax = Axis(fig[1, 1],
-    #     xlabel="u velocity (m/s)",
-    #     ylabel="z (m)",
-    #     title="Initial Velocity Profile U(z)")
-    ax = Axis(fig[1, 1], backgroundcolor=:transparent)
-    hidedecorations!(ax)
-    hidespines!(ax)
-    # lines!(ax, u_profile, collect(z_vals), linewidth=3, color=:blue)
-    lines!(ax, u_profile, collect(z_vals), linewidth=6, color=:black, linestyle=:dash)
-    # hlines!(ax, [-Lz / 2], color=:red, linestyle=:dash, label="Shear layer center")
-    # vlines!(ax, [0], color=:gray, linestyle=:dot)
-    # axislegend(ax, position=:lt)
+    fig = Figure(size=(400, 500), backgroundcolor=:white)
+    ax = Axis(fig[1, 1],
+        xlabel="u velocity (m/s)",
+        ylabel="z (m)",
+        title="Initial Velocity Profile U(z)")
+    lines!(ax, u_profile, collect(z_vals), linewidth=3, color=:blue)
+    hlines!(ax, [-Lz / 2], color=:red, linestyle=:dash, label="Shear layer center")
+    vlines!(ax, [0], color=:gray, linestyle=:dot)
+    axislegend(ax, position=:lt)
 
     # # Draw horizontal arrows that scale with local velocity
     # n_arrows = 10
