@@ -3,6 +3,7 @@
 
 # Large animation/media files
 *.gif
+*.png
 
 # Julia package artifacts
 Manifest.toml

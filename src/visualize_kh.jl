@@ -28,7 +28,7 @@ Output animation is saved to `animation/` directory.
     # Reads: output/KH1F.jld2
     # Saves: animation/KH1F.gif
 """
-function animate_kh(filename::String; format=:mp4, framerate=8, time_unit="s")
+function animate_kh(filename::String; format=:mp4, framerate=8, time_unit="s", u₀=nothing, δ=nothing)
     # Build input and output paths
     input_file = joinpath("output", filename)
 
@@ -52,15 +52,26 @@ function animate_kh(filename::String; format=:mp4, framerate=8, time_unit="s")
 
     println("u_max = $u_max, ζ_max = $ζ_max")
 
-    fig = Figure(size=(900, 850))
+    fig = Figure(size=(1000, 900))
     ax_u = Axis(fig[1, 1], title="u velocity", xlabel="x (m)", ylabel="z (m)")
     ax_ζ = Axis(fig[2, 1], title="Relative Vorticity", xlabel="x (m)", ylabel="z (m)")
 
+    # Title display with parameters
+    title_text = "Kelvin-Helmholtz Instability"
+    if u₀ !== nothing && δ !== nothing
+        title_text *= " (u₀ = $u₀ m/s, δ = $δ m)"
+    end
+    
     # Time display
     times = ζ_timeseries.times
     n = Observable(1)
-    time_str = @lift @sprintf("t = %.2f %s", times[$n], time_unit)
-    Label(fig[0, :], time_str, fontsize=20, tellwidth=false)
+    
+    label_str = @lift begin
+        t = times[$n]
+        @sprintf("%s | t = %.2f %s", title_text, t, time_unit)
+    end
+    
+    Label(fig[0, :], label_str, fontsize=24, tellwidth=false)
 
     u_n = @lift interior(u_timeseries[$n], :, 1, :)
     ζ_n = @lift interior(ζ_timeseries[$n], :, 1, :)
